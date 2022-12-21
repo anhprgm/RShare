@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "383344657308",
+    "project_id": "rshare-52ded",
+    "storage_bucket": "rshare-52ded.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383344657308:android:0cc71b5e29d1a5d21a3e59",
+        "android_client_info": {
+          "package_name": "com.theanhdev.rshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383344657308-24v5m16staolraia7aiuk2fial54oata.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACjyvmUA64wHeRCvkGChXT5Rwesz3aEQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383344657308-24v5m16staolraia7aiuk2fial54oata.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
