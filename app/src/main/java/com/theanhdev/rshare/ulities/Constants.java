@@ -2,6 +2,7 @@ package com.theanhdev.rshare.ulities;
 
 public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
+    public static final String KEY_COLLECTION_POSTS = "posts";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
@@ -25,4 +26,9 @@ public class Constants {
     public static final String KEY_AVAILABILITY = "availability";
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
+    public static final String UID_POST = "uidPost";
+    public static final String ID_POST = "idPost";
+    public static final String ENCODED_IMAGE_POST = "encodedImagePost";
+    public static final String CAPTION_POST = "captionPost";
+    public static final String SUM_LOVE_POST = "sumLovePost";
 }

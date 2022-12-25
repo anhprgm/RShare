@@ -4,6 +4,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,25 +14,40 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.service.media.MediaBrowserService;
+import android.text.Editable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
+import com.theanhdev.rshare.ulities.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 
 public class MakePostActivity extends AppCompatActivity {
     private ImageView openCamera, pickImageIc, image, backBtn, backImg, ImageOpen;
+    private TextView SavePost;
+    private EditText caption;
     private String encodedImage = "";
-    private LinearLayout seeImage, userInf, postLayout;
+    private LinearLayout seeImage, postLayout;
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private RelativeLayout userInf;
     private static final int pic_id = 127;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +67,37 @@ public class MakePostActivity extends AppCompatActivity {
             Toast.makeText(this, "developing", Toast.LENGTH_SHORT).show();
         });
         openImage();
+
+        SavePost.setOnClickListener(v -> {
+            if (caption.getText().toString().isEmpty())
+                Toast.makeText(this, "fill the caption", Toast.LENGTH_SHORT).show();
+            else {
+                Random random = new Random();
+                int ranNum = random.nextInt(0);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                HashMap<String, String> Post = new HashMap<>();
+                Post.put(Constants.ID_POST, String.valueOf(ranNum));
+                assert user != null;
+                Post.put(Constants.UID_POST, user.getUid());
+                Post.put(Constants.CAPTION_POST, caption.getText().toString());
+                Post.put(Constants.ENCODED_IMAGE_POST, encodedImage);
+                Post.put(Constants.SUM_LOVE_POST, "0");
+                db.collection(Constants.KEY_COLLECTION_POSTS)
+                        .add(Post)
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, MainActivity.class);
+                            startActivity(intent);
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                        });
+            }
+        });
     }
     private void binding() {
+        caption = findViewById(R.id.caption);
         openCamera = findViewById(R.id.openCam);
         pickImageIc = findViewById(R.id.openPhoto);
         image = findViewById(R.id.image);
@@ -61,6 +107,7 @@ public class MakePostActivity extends AppCompatActivity {
         postLayout = findViewById(R.id.postLayout);
         backImg = findViewById(R.id.backOnImage);
         ImageOpen = findViewById(R.id.imageOpen);
+        SavePost = findViewById(R.id.savePost);
     }
 
     private String encodeImage(Bitmap bitmap){
@@ -115,6 +162,13 @@ public class MakePostActivity extends AppCompatActivity {
             postLayout.setVisibility(View.VISIBLE);
             seeImage.setVisibility(View.GONE);
         });
+    }
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fl_wrapper, fragment);
+        transaction.addToBackStack("replacement");
+        transaction.setReorderingAllowed(true);
+        transaction.commit();
     }
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

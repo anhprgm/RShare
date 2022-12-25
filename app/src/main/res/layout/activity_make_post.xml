@@ -5,37 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.MakePostActivity">
-    <LinearLayout
+    <RelativeLayout
         android:visibility="visible"
         android:id="@+id/UserInf"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="60dp">
         <ImageView
             android:id="@+id/back"
             android:layout_marginStart="10dp"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
             android:src="@drawable/ic_back"/>
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_toEndOf="@+id/back"
             android:layout_width="50dp"
+            android:id="@+id/avt"
             android:layout_height="50dp"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/account"/>
+            android:background="@drawable/circle_background"
+            android:src="@drawable/logorshare"/>
         <TextView
+            android:layout_toEndOf="@+id/avt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name User"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_marginStart="10dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_centerVertical="true"/>
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:background="@drawable/background_input"
+            android:text="Post"
+            android:id="@+id/savePost"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -97,7 +115,7 @@
                 android:contentDescription="pick image" />
         </LinearLayout>
         <ImageView
-            android:background="@color/hintTextColor"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:id="@+id/image"

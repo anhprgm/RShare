@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
 
@@ -39,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private final FirebaseUser user = mAuth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         SwitchSign();
         if (user != null) {
             Intent intent = new Intent(this, MainActivity.class);
+            Toast.makeText(this, user.getUid(), Toast.LENGTH_SHORT).show();
             startActivity(intent);
         } else SignActivity();
     }
@@ -125,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     progressBar.setVisibility(View.GONE);
                                 });
+
                     }
                     break;
             }
