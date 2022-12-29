@@ -22,6 +22,8 @@
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_back"/>
         <com.makeramen.roundedimageview.RoundedImageView
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
             android:layout_toEndOf="@+id/back"
             android:layout_width="50dp"
             android:id="@+id/avt"
@@ -29,12 +31,14 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:background="@drawable/circle_background"
-            android:src="@drawable/logorshare"/>
+            android:src="@drawable/account"/>
         <TextView
             android:layout_toEndOf="@+id/avt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name User"
+            android:id="@+id/userName"
+            android:fontFamily="@font/extra_light"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_marginStart="10dp"
@@ -45,6 +49,7 @@
             android:layout_height="40dp"
             android:background="@drawable/background_input"
             android:text="Post"
+            android:fontFamily="@font/extra_light"
             android:id="@+id/savePost"
             android:gravity="center"
             android:textSize="20sp"
@@ -86,6 +91,7 @@
         android:id="@+id/postLayout"
         android:layout_alignParentBottom="true">
         <EditText
+            android:fontFamily="@font/extra_light"
             android:id="@+id/caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

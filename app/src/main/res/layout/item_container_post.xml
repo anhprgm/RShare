@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:visibility="visible"
+        android:id="@+id/UserInf"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_width="40dp"
+            android:id="@+id/avt"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/account"/>
+        <LinearLayout
+            android:layout_toEndOf="@+id/avt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:fontFamily="@font/extra_light"
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/timeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="time Stamp"
+                android:textSize="8sp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/UserInf"
+        android:orientation="vertical"
+        android:id="@+id/postLayout">
+        <TextView
+            android:id="@+id/caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write something to share your status"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/hintTextColor"
+            android:background="@android:color/transparent"/>
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:background="@color/hintTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:id="@+id/imagePost"
+            android:contentDescription="ur image" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_below="@+id/postLayout"
+        android:orientation="horizontal">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:src="@drawable/account"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/account"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

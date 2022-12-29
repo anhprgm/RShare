@@ -3,18 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.HomeFragment">
-
     <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
+    <RelativeLayout
         android:layout_marginTop="70dp"
         android:layout_width="match_parent"
-        android:id="@+id/recycleLayout"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:indeterminateDrawable="@drawable/custom_progressbar"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclePost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:clipToPadding="false"
+            android:layout_marginBottom="55dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp">
-
         <ImageView
             android:id="@+id/logo"
             android:layout_width="40dp"
@@ -53,6 +68,5 @@
             android:src="@drawable/message_svgrepo_com"
             android:contentDescription="@string/app_name" />
     </RelativeLayout>
-
 
 </FrameLayout>

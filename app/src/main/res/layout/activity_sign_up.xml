@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.SignUpActivity">
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp">
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/backBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_back" />
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/backBtn"
+            android:id="@+id/text"
+            android:text="More information about you"
+            android:textSize="18sp"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/extra_light"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:text="DONE"
+            android:gravity="center"
+            android:textColor="@color/hintTextColor"
+            android:background="@drawable/background_input"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/addUserImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/header">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/account"
+            android:id="@+id/userImage"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top|center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add your image"
+            android:fontFamily="@font/extra_light"
+            android:textColor="@color/blue_main"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/addUserImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/body1"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="Name"
+            android:fontFamily="@font/extra_light"
+            android:textColor="@color/hintTextColor"
+            android:layout_marginStart="10dp"/>
+        <EditText
+            android:id="@+id/UserNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:hint="Your Name"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintTextColor"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/extra_light"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/body2"
+        android:layout_below="@+id/body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="Tag Name"
+            android:fontFamily="@font/extra_light"
+            android:textColor="@color/hintTextColor"
+            android:layout_marginStart="10dp"/>
+
+        <EditText
+            android:id="@+id/userTagNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/extra_light"
+            android:hint="Your Tag Name"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintTextColor"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/body3"
+        android:layout_below="@+id/body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="Bio"
+            android:fontFamily="@font/extra_light"
+            android:textColor="@color/hintTextColor"
+            android:layout_marginStart="10dp"/>
+
+        <EditText
+            android:id="@+id/userBioInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/extra_light"
+            android:hint="Your Bio"
+            android:textColor="@color/black"
+            android:textColorHint="@color/hintTextColor"
+            android:textSize="20sp" />
+    </LinearLayout>
+</RelativeLayout>

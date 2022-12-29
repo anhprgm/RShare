@@ -14,7 +14,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         app:itemIconSize="30dp"
         app:itemIconTint="@color/item_foreground"
         app:itemTextColor="@color/item_foreground"

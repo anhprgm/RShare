@@ -3,37 +3,29 @@ package com.theanhdev.rshare.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.theanhdev.rshare.R;
-
-import java.util.ArrayList;
+import com.theanhdev.rshare.funtionUsing.Funtion;
+import com.theanhdev.rshare.ulities.Constants;
 
 public class OpenImageActivity extends AppCompatActivity {
-    private String encodedImage;
-    private ImageView image;
+    private String TAG = "OPEN_IMAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_image);
-        image = findViewById(R.id.image);
+        Funtion funtion = new Funtion();
+        ImageView seeImg = findViewById(R.id.SeeImage);
+        ImageView backBtn = findViewById(R.id.backBtn);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            if (bundle.getString("encodedList") != null) {
-                encodedImage = bundle.getString("encodedImage");
-                Log.d("encoded", encodedImage);
+            if (bundle.getString(Constants.KEY_IMAGE) != null) {
+                seeImg.setImageBitmap(funtion.setImageBitmap(bundle.getString(Constants.KEY_IMAGE)));
             }
         }
-        loadImage();
-    }
-
-    private void loadImage() {
-        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        image.setImageBitmap(bitmap);
+        backBtn.setOnClickListener(view -> onBackPressed());
     }
 }

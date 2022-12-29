@@ -2,7 +2,7 @@ package com.theanhdev.rshare.Activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,8 +13,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.service.media.MediaBrowserService;
-import android.text.Editable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,18 +25,24 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
+import com.theanhdev.rshare.models.Posts;
 import com.theanhdev.rshare.ulities.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MakePostActivity extends AppCompatActivity {
     private ImageView openCamera, pickImageIc, image, backBtn, backImg, ImageOpen;
@@ -48,6 +52,7 @@ public class MakePostActivity extends AppCompatActivity {
     private LinearLayout seeImage, postLayout;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private RelativeLayout userInf;
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     private static final int pic_id = 127;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +67,21 @@ public class MakePostActivity extends AppCompatActivity {
         backBtn.setOnClickListener(view -> onBackPressed());
 
         openCamera.setOnClickListener(view -> {
-//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            startActivityForResult(intent, pic_id);
-            Toast.makeText(this, "developing", Toast.LENGTH_SHORT).show();
+            DatabaseReference list_post = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
+            list_post.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Posts posts = dataSnapshot.getValue(Posts.class);
+                        assert posts != null;
+                        Log.d("AAA", posts.caption);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         });
         openImage();
 
@@ -72,29 +89,31 @@ public class MakePostActivity extends AppCompatActivity {
             if (caption.getText().toString().isEmpty())
                 Toast.makeText(this, "fill the caption", Toast.LENGTH_SHORT).show();
             else {
-                Random random = new Random();
-                int ranNum = random.nextInt(0);
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                int idPost = (int) (Math.random() * (1000000000 + 1));
                 FirebaseUser user = mAuth.getCurrentUser();
-                HashMap<String, String> Post = new HashMap<>();
-                Post.put(Constants.ID_POST, String.valueOf(ranNum));
+                SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
+                DatabaseReference databaseReference = database.getReference();
                 assert user != null;
-                Post.put(Constants.UID_POST, user.getUid());
-                Post.put(Constants.CAPTION_POST, caption.getText().toString());
-                Post.put(Constants.ENCODED_IMAGE_POST, encodedImage);
-                Post.put(Constants.SUM_LOVE_POST, "0");
-                db.collection(Constants.KEY_COLLECTION_POSTS)
-                        .add(Post)
-                        .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this, MainActivity.class);
-                            startActivity(intent);
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                        });
+                Posts posts = new Posts();
+                posts.image = encodedImage;
+                posts.uid = user.getUid();
+                posts.caption = caption.getText().toString();
+                posts.sumLove = 0;
+                posts.timeStamp = getTimeCurrent();
+                try {
+                    posts.dateObject = format.parse(getTimeCurrent());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                databaseReference.child(Constants.KEY_COLLECTION_POSTS).child(String.valueOf(idPost)).setValue(posts).addOnCompleteListener(task -> {
+                    Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                });
             }
         });
+
     }
     private void binding() {
         caption = findViewById(R.id.caption);
@@ -108,11 +127,12 @@ public class MakePostActivity extends AppCompatActivity {
         backImg = findViewById(R.id.backOnImage);
         ImageOpen = findViewById(R.id.imageOpen);
         SavePost = findViewById(R.id.savePost);
+
     }
 
     private String encodeImage(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         Log.d("Compressed dimensions xxx", bitmap.getWidth()+" "+bitmap.getHeight());
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
@@ -169,6 +189,17 @@ public class MakePostActivity extends AppCompatActivity {
         transaction.addToBackStack("replacement");
         transaction.setReorderingAllowed(true);
         transaction.commit();
+    }
+
+    private String getTimeCurrent() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        return format.format(date);
+    }
+
+    private Bitmap setUserImage(String encodedImage){
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

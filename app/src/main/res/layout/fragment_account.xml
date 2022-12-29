@@ -3,12 +3,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.AccountFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Acc" />
+        android:layout_height="match_parent">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/userImage"
+                android:layout_width="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="100dp"
+                app:riv_oval="true"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="top|center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/account" />
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/extra_light"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:text="Name"
+                android:layout_below="@+id/userImage"
+                android:id="@+id/userNameAcc"
+                android:textColor="@color/blue_main" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header1"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/userImage"
+            android:layout_marginStart="30dp"
+            android:orientation="horizontal">
+            <TextView
+                android:textColor="@color/black"
+                android:id="@+id/inbox"
+                android:padding="5dp"
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:text="inbox"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:fontFamily="@font/extra_light"
+                android:background="@drawable/background_input"/>
+            <TextView
+                android:textColor="@color/black"
+                android:id="@+id/follow"
+                android:padding="5dp"
+                android:layout_width="65dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="follow"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:fontFamily="@font/extra_light"
+                android:background="@drawable/background_input"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/header1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/userImage"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:orientation="horizontal">
+            <TextView
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="0\nPosts"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:fontFamily="@font/extra_light" />
+            <TextView
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="0\nFollows"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:fontFamily="@font/extra_light" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/more_vert"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/userNameAcc"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="55dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:id="@+id/recyclePostUser"/>
+    </RelativeLayout>
 
 </FrameLayout>

@@ -145,6 +145,7 @@
             android:textSize="10sp" />
 
         <ImageView
+            android:id="@+id/hintBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="10dp"

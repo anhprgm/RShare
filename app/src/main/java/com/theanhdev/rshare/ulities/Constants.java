@@ -1,10 +1,16 @@
 package com.theanhdev.rshare.ulities;
 
 public class Constants {
+
+    public static final String KEY_LIST_USERS = "list_users";
+    public static final String KEY_FIREBASE = "https://rshare-52ded-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    //-------------------
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_COLLECTION_POSTS = "posts";
     public static final String KEY_NAME = "name";
+    public static final String KEY_TAG_NAME = "tag_name";
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_USER_BIO = "user_bio";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_PREFERENCE_NAME = "chatAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
