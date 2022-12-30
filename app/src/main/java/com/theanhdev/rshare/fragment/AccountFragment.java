@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.theanhdev.rshare.Activities.OpenImageActivity;
+import com.theanhdev.rshare.Activities.UserCustomActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
 import com.theanhdev.rshare.funtionUsing.Funtion;
@@ -107,6 +109,7 @@ public class AccountFragment extends Fragment implements PostListener {
         RoundedImageView avt = view.findViewById(R.id.userImage);
         TextView uName = view.findViewById(R.id.userNameAcc);
         TextView inbox, follow;
+        ImageView moreBtn = view.findViewById(R.id.moreBtn);
         inbox = view.findViewById(R.id.inbox);
         follow = view.findViewById(R.id.follow);
         RecyclerView recyclerPostUser = view.findViewById(R.id.recyclePostUser);
@@ -209,52 +212,15 @@ public class AccountFragment extends Fragment implements PostListener {
 
             }
         });
-//        db.collection(Constants.KEY_COLLECTION_USERS)
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && task.getResult() != null) {
-//                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-//                            assert user != null;
-//                            if (Objects.equals(queryDocumentSnapshot.getString(Constants.KEY_USER_ID), user.getUid())) {
-//                                users.UserImage = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
-//                                avt.setImageBitmap(getBitmapImage(queryDocumentSnapshot.getString(Constants.KEY_IMAGE)));
-//                                users.UserName = queryDocumentSnapshot.getString(Constants.KEY_NAME);
-//                                uName.setText(queryDocumentSnapshot.getString(Constants.KEY_NAME));
-//                                break;
-//                            }
-//                        }
-//                    }
-//                });
+
         avt.setOnClickListener(v -> {
-//            Intent intent = new Intent(getActivity(), OpenImageActivity.class);
-//            intent.putExtra(Constants.KEY_IMAGE, users.UserImage);
-//            startActivity(intent);
+
         });
-//        db.collection(Constants.KEY_COLLECTION_POSTS)
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                   if (task.isSuccessful() && task.getResult() != null) {
-//                       List<Posts> postsList = new ArrayList<>();
-//                       for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-//                           assert user != null;
-//                           if (Objects.equals(queryDocumentSnapshot.getString(Constants.UID_POST), user.getUid())) {
-//                               Posts posts = new Posts();
-//                               posts.caption = queryDocumentSnapshot.getString(Constants.CAPTION_POST);
-//                               posts.image = queryDocumentSnapshot.getString(Constants.ENCODED_IMAGE_POST);
-//                               posts.timeStamp = queryDocumentSnapshot.getString(Constants.KEY_TIMESTAMP);
-//                               posts.userName = users.UserName;
-//                               posts.userImage = users.UserImage;
-//                               postsList.add(posts);
-//                           }
-//
-//                           if (postsList.size() > 0) {
-//                               Collections.sort(postsList, ((posts, t1) -> t1.timeStamp.compareTo(posts.timeStamp)));
-//                               RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
-////                               recyclerPostUser.setAdapter(rhomeAdapter);
-//                           } else Toast.makeText(getActivity(), "min", Toast.LENGTH_SHORT).show();
-//                       }
-//                   }
-//                });
+
+        moreBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserCustomActivity.class);
+            startActivity(intent);
+        });
         return view;
     }
     private Bitmap getBitmapImage(String encodedImage){
@@ -282,4 +248,5 @@ public class AccountFragment extends Fragment implements PostListener {
         });
         Log.d("AAA", posts.idPost);
     }
+
 }

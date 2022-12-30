@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.theanhdev.rshare.Activities.ChatActivity;
 import com.theanhdev.rshare.Activities.LoginActivity;
 import com.theanhdev.rshare.Activities.MakePostActivity;
 import com.theanhdev.rshare.Activities.OpenImageActivity;
@@ -108,7 +109,7 @@ public class HomeFragment extends Fragment implements PostListener {
         ProgressBar progressBar = view.findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.VISIBLE);
         ImageView logo = view.findViewById(R.id.logo);
-
+        ImageView chat = view.findViewById(R.id.chat);
         logo.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -200,7 +201,10 @@ public class HomeFragment extends Fragment implements PostListener {
             Intent intent = new Intent(getActivity(), MakePostActivity.class);
             startActivity(intent);
         });
-
+        chat.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChatActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }

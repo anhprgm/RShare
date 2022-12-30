@@ -2,6 +2,7 @@ package com.theanhdev.rshare.Activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,21 +18,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
-import com.theanhdev.rshare.databinding.ActivitySignUpBinding;
+import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
 
-public class SignUpActivity extends AppCompatActivity {
+public class UserCustomActivity extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     private FirebaseUser user = mAuth.getCurrentUser();
     private String encodedImage = "";
     private TextView save;
@@ -55,26 +63,47 @@ public class SignUpActivity extends AppCompatActivity {
         back.setOnClickListener(view -> {
             onBackPressed();
         });
-        save.setOnClickListener(v -> {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            HashMap<String, String> users = new HashMap<>();
-            users.put(Constants.KEY_EMAIL, user.getEmail());
-            users.put(Constants.KEY_IMAGE, encodedImage);
-            users.put(Constants.KEY_USER_ID, user.getUid());
-            users.put(Constants.KEY_NAME, Uname.getText().toString().trim());
-            users.put(Constants.KEY_USER_BIO, Ubio.getText().toString().trim());
-            users.put(Constants.KEY_TAG_NAME, Utag.getText().toString().trim());
-            db.collection(Constants.KEY_COLLECTION_USERS)
-                    .add(users)
-                    .addOnCompleteListener(documentReference -> {
-                        Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                    });
+        save.setOnClickListener(v -> {sendData();});
+
+    }
+
+    private void sendData() {
+        String name    = Uname.getText().toString().trim();
+        String tagName = Utag.getText().toString().trim();
+        String bio     = Ubio.getText().toString().trim();
+        DatabaseReference UserRef = database.getReference().child(Constants.KEY_LIST_USERS);
+        UserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Users users = dataSnapshot.getValue(Users.class);
+                    assert users != null;
+                    if (users.uid.equals(user.getUid())) {
+                        users.UserImage = encodedImage;
+                        users.UserName = name;
+                        users.tagName = tagName;
+                        users.bio = bio;
+                        UserRef.child(users.uid).setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(UserCustomActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(UserCustomActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
+
+
     }
 
     private String encodeImage(Bitmap bitmap){

@@ -2,11 +2,8 @@ package com.theanhdev.rshare.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -17,18 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
@@ -37,7 +28,6 @@ import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
 import java.util.Objects;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         }, 3900);
 
         hintBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SignUpActivity.class);
+            Intent intent = new Intent(this, UserCustomActivity.class);
             startActivity(intent);
         });
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentStart="true">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/avt"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/account" />
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="5dp"
+            android:layout_marginTop="1dp"
+            android:visibility="gone"
+            android:src="@drawable/circle_status"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="70dp"
+            android:maxLines="2"
+            android:layout_height="60dp"
+            android:text="User Name"
+            android:textAlignment="center"
+            android:textSize="12dp" />
+    </LinearLayout>
+<!--    <ImageView-->
+<!--        android:layout_width="10dp"-->
+<!--        android:layout_height="10dp"-->
+<!--        android:layout_alignBottom="@+id/avt"-->
+<!--        android:layout_alignEnd="@id/avt"-->
+<!--        android:id="@+id/status"-->
+<!--        android:src="@drawable/circle_status"/>-->
+</RelativeLayout>

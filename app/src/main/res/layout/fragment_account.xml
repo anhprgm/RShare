@@ -96,6 +96,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:id="@+id/moreBtn"
             android:src="@drawable/more_vert"
             android:layout_marginTop="20dp"
             android:layout_alignParentEnd="true"
