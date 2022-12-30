@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.provider.ContactsContract;
 import android.service.autofill.Sanitizer;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -114,56 +116,77 @@ public class AccountFragment extends Fragment implements PostListener {
         DatabaseReference usersRef = database.getReference().child(Constants.KEY_LIST_USERS);
         DatabaseReference postsRef = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
 
+        //get bundle
+        assert getArguments() != null;
+        String id = getArguments().getString(Constants.KEY_USER_ID);
+        assert user != null;
+        Log.d("AAA", id + "\n" +user.getUid());
+
+        //if id == uid hide inbox
+        inbox.setVisibility(View.VISIBLE);
+        follow.setVisibility(View.VISIBLE);
+        if (id.equals(user.getUid())) {
+            inbox.setVisibility(View.INVISIBLE);
+            follow.setVisibility(View.INVISIBLE);
+        }
         List<Posts> postsList = new ArrayList<>();
         RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
         recyclerPostUser.setAdapter(rhomeAdapter);
-
+        //Load user post
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get user info and break;
                     Users users = dataSnapshot.getValue(Users.class);
                     assert users != null;
-                    assert user != null;
-                    if (user.getUid().equals(users.uid)) {
+                    if (id.equals(users.uid)) {
+                        if (!Objects.equals(users.UserImage, "")) {
+                            avt.setImageBitmap(getBitmapImage(users.UserImage));
+                        } else avt.setImageResource(R.drawable.user_blank_img);
+                        uName.setText(users.UserName);
                         postsRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
+                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                    //load post user
                                     Posts posts = dataSnapshot1.getValue(Posts.class);
-                                    SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
-                                    try {
-                                        Funtion funtion = new Funtion();
-                                        Date current = format.parse(funtion.getTimeCurrent());
-                                        Date timePost = format.parse(posts.timeStamp);
-                                        assert current != null;
-                                        assert timePost != null;
-                                        long diff = current.getTime() - timePost.getTime();
-                                        int timeInSeconds = (int) (diff / 1000);
-                                        int hours, minutes, seconds, days;
-                                        hours = timeInSeconds / 3600;
-                                        timeInSeconds = timeInSeconds - (hours * 3600);
-                                        minutes = timeInSeconds / 60;
-                                        timeInSeconds = timeInSeconds - (minutes * 60);
-                                        seconds = timeInSeconds;
-                                        days = hours / 24;
-                                        if (days < 24) {
-                                            if (hours > 1) {
-                                                posts.timeStamp = hours + "h";
-                                            } else {
-                                                if (minutes > 0) {
-                                                    posts.timeStamp = minutes + "m";
+                                    assert posts != null;
+                                    if (id.equals(posts.uid)) {
+                                        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
+                                        try {
+                                            Funtion funtion = new Funtion();
+                                            Date current = format.parse(funtion.getTimeCurrent());
+                                            Date timePost = format.parse(posts.timeStamp);
+                                            assert current != null;
+                                            assert timePost != null;
+                                            long diff = current.getTime() - timePost.getTime();
+                                            int timeInSeconds = (int) (diff / 1000);
+                                            int hours, minutes, seconds, days;
+                                            hours = timeInSeconds / 3600;
+                                            timeInSeconds = timeInSeconds - (hours * 3600);
+                                            minutes = timeInSeconds / 60;
+                                            timeInSeconds = timeInSeconds - (minutes * 60);
+                                            seconds = timeInSeconds;
+                                            days = hours / 24;
+                                            if (days < 24) {
+                                                if (hours > 1) {
+                                                    posts.timeStamp = hours + "h";
                                                 } else {
-                                                    posts.timeStamp = seconds + "s";
+                                                    if (minutes > 0) {
+                                                        posts.timeStamp = minutes + "m";
+                                                    } else {
+                                                        posts.timeStamp = seconds + "s";
+                                                    }
                                                 }
-                                            }
-                                        } else posts.timeStamp = days + " day";
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                            } else posts.timeStamp = days + " day";
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        posts.userName = users.UserName;
+                                        posts.userImage = users.UserImage;
+                                        postsList.add(posts);
                                     }
-                                    posts.userName = users.UserName;
-                                    posts.userImage = users.UserImage;
-                                    postsList.add(posts);
                                 }
                                 if (postsList.size() > 0) {
                                     postsList.sort(((posts, t1) -> t1.dateObject.compareTo(posts.dateObject)));
@@ -202,11 +225,6 @@ public class AccountFragment extends Fragment implements PostListener {
 //                        }
 //                    }
 //                });
-        assert user != null;
-        if (user.getUid().equals(user.getUid())) {
-            inbox.setVisibility(View.GONE);
-            follow.setVisibility(View.GONE);
-        }
         avt.setOnClickListener(v -> {
 //            Intent intent = new Intent(getActivity(), OpenImageActivity.class);
 //            intent.putExtra(Constants.KEY_IMAGE, users.UserImage);

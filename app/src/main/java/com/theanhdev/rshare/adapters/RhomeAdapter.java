@@ -62,6 +62,7 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
             } else binding.avt.setImageBitmap(getBitmapImage(posts.userImage));
 
             binding.timeStamp.setText(posts.timeStamp + " ago");
+            binding.avt.setOnClickListener(v -> postListener.onUserImageClicked(posts));
         }
     }
 
