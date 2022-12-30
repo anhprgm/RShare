@@ -273,4 +273,13 @@ public class AccountFragment extends Fragment implements PostListener {
     public void onUserImageClicked(Posts posts) {
 
     }
+
+    @Override
+    public void onDelBtn(Posts posts) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE).getReference().child(Constants.KEY_COLLECTION_POSTS);
+        databaseReference.child(posts.idPost).removeValue().addOnCompleteListener(task -> {
+            Toast.makeText(getActivity(), "ok", Toast.LENGTH_SHORT).show();
+        });
+        Log.d("AAA", posts.idPost);
+    }
 }

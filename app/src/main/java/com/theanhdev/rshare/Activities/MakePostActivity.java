@@ -89,10 +89,10 @@ public class MakePostActivity extends AppCompatActivity {
             if (caption.getText().toString().isEmpty())
                 Toast.makeText(this, "fill the caption", Toast.LENGTH_SHORT).show();
             else {
-                int idPost = (int) (Math.random() * (1000000000 + 1));
                 FirebaseUser user = mAuth.getCurrentUser();
                 SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
                 DatabaseReference databaseReference = database.getReference();
+                String idPost = databaseReference.child(Constants.KEY_COLLECTION_POSTS).push().getKey();
                 assert user != null;
                 Posts posts = new Posts();
                 posts.image = encodedImage;
@@ -100,12 +100,14 @@ public class MakePostActivity extends AppCompatActivity {
                 posts.caption = caption.getText().toString();
                 posts.sumLove = 0;
                 posts.timeStamp = getTimeCurrent();
+                posts.idPost = idPost;
                 try {
                     posts.dateObject = format.parse(getTimeCurrent());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                databaseReference.child(Constants.KEY_COLLECTION_POSTS).child(String.valueOf(idPost)).setValue(posts).addOnCompleteListener(task -> {
+                assert idPost != null;
+                databaseReference.child(Constants.KEY_COLLECTION_POSTS).child(idPost).setValue(posts).addOnCompleteListener(task -> {
                     Toast.makeText(this, "Complete", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

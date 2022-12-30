@@ -48,6 +48,14 @@
                 android:textSize="8sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/more_vert"
+            android:id="@+id/moreBtn"
+            android:layout_marginEnd="5dp"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
@@ -93,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageButton
+            android:id="@+id/del"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/account"

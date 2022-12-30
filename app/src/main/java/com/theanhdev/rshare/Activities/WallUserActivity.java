@@ -112,6 +112,11 @@ public class WallUserActivity extends AppCompatActivity implements PostListener 
     public void onUserImageClicked(Posts posts) {
     }
 
+    @Override
+    public void onDelBtn(Posts posts) {
+
+    }
+
     private Bitmap getBitmapImage(String encodedImage){
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

@@ -228,7 +228,12 @@ public class HomeFragment extends Fragment implements PostListener {
 
     }
 
-   private Bitmap getUserImage(String encodedImage){
+    @Override
+    public void onDelBtn(Posts posts) {
+
+    }
+
+    private Bitmap getUserImage(String encodedImage){
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
