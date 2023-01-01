@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.UserChatActivity">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        android:id="@+id/messageRecycleView"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"/>
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/backBtn"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/avt"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/user_blank_img"/>
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/backBtn"
+            android:src="@drawable/ic_back"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:id="@+id/userName"
+            android:text="User Receiver Name"
+            android:fontFamily="@font/extra_light"
+            android:layout_toEndOf="@+id/avt"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"/>
+    </RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:padding="8dp"
+            android:maxHeight="100dp"
+            android:id="@+id/inputMessage"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/background_input"/>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/outline_send_24"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:id="@+id/sent"
+            android:layout_toEndOf="@+id/inputMessage"/>
+    </RelativeLayout>
+</RelativeLayout>

@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +28,7 @@ public class Funtion {
         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
         return format.format(date);
     }
-    public String encodeImage(Bitmap bitmap){
+    public String encodeImage(@NonNull Bitmap bitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         Log.d("Compressed dimensions xxx", bitmap.getWidth()+" "+bitmap.getHeight());
