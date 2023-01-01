@@ -1,12 +1,5 @@
 package com.theanhdev.rshare.Activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,15 +29,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.models.Posts;
+import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,7 +46,8 @@ import java.util.Locale;
 
 public class MakePostActivity extends AppCompatActivity {
     private ImageView openCamera, pickImageIc, image, backBtn, backImg, ImageOpen;
-    private TextView SavePost;
+    private RoundedImageView avt;
+    private TextView SavePost, UserName;
     private EditText caption;
     private String encodedImage = "";
     private LinearLayout seeImage, postLayout;
@@ -54,6 +55,7 @@ public class MakePostActivity extends AppCompatActivity {
     private RelativeLayout userInf;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     private static final int pic_id = 127;
+    private final int REQUEST_IMAGE_CAPTURE = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,24 +69,13 @@ public class MakePostActivity extends AppCompatActivity {
         backBtn.setOnClickListener(view -> onBackPressed());
 
         openCamera.setOnClickListener(view -> {
-            DatabaseReference list_post = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
-            list_post.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Posts posts = dataSnapshot.getValue(Posts.class);
-                        assert posts != null;
-                        Log.d("AAA", posts.caption);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            }
         });
         openImage();
-
+        setAvtImg();
         SavePost.setOnClickListener(v -> {
             if (caption.getText().toString().isEmpty())
                 Toast.makeText(this, "fill the caption", Toast.LENGTH_SHORT).show();
@@ -129,6 +120,8 @@ public class MakePostActivity extends AppCompatActivity {
         backImg = findViewById(R.id.backOnImage);
         ImageOpen = findViewById(R.id.imageOpen);
         SavePost = findViewById(R.id.savePost);
+        avt = findViewById(R.id.avt);
+        UserName = findViewById(R.id.userName);
 
     }
 
@@ -185,17 +178,10 @@ public class MakePostActivity extends AppCompatActivity {
             seeImage.setVisibility(View.GONE);
         });
     }
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fl_wrapper, fragment);
-        transaction.addToBackStack("replacement");
-        transaction.setReorderingAllowed(true);
-        transaction.commit();
-    }
 
     private String getTimeCurrent() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         return format.format(date);
     }
 
@@ -203,14 +189,41 @@ public class MakePostActivity extends AppCompatActivity {
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == pic_id) {
-//            assert data != null;
-//            Bitmap photo = (Bitmap) data.getExtras().get("data");
-//            encodedImage = encodeImage(photo);
-//            loadImage();
-//        }
-//    }
+
+    private void setAvtImg() {
+        DatabaseReference databaseReference = database.getReference().child(Constants.KEY_LIST_USERS);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Users users = dataSnapshot.getValue(Users.class);
+                    assert user != null;
+                    assert users != null;
+                    if (users.uid.equals(user.getUid())) {
+                        avt.setImageBitmap(setUserImage(users.UserImage));
+                        UserName.setText(users.UserName);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            assert data != null;
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");
+            encodedImage = encodeImage(bitmap);
+            loadImage();
+        }
+    }
 }

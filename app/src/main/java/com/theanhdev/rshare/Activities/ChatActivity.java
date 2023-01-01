@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,6 +65,8 @@ public class ChatActivity extends AppCompatActivity implements UsersListener {
 
     @Override
     public void OnClickUser(Users users) {
-
+        Intent intent = new Intent(ChatActivity.this, UserChatActivity.class);
+        intent.putExtra(Constants.KEY_USER_RECEIVER, users.uid);
+        startActivity(intent);
     }
 }
