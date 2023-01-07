@@ -2,16 +2,19 @@ package com.theanhdev.rshare.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +32,7 @@ import com.theanhdev.rshare.models.ChatMessage;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +48,7 @@ public class UserChatActivity extends AppCompatActivity {
     private EditText inputMessage;
     private ImageView backBtn, sent;
     RecyclerView messageRecycleView;
+    String avtReceiver = "";
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     private String senderRoom, receiverRoom;
@@ -69,6 +74,7 @@ public class UserChatActivity extends AppCompatActivity {
                         Log.d("AAA", "onDataChange: ");
                         avt.setImageBitmap(setImageBitmap(users.UserImage));
                         UserName.setText(users.UserName);
+                        avtReceiver = users.UserImage;
                         break;
                     }
                 }
@@ -85,6 +91,7 @@ public class UserChatActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(chatMessages, firebaseUser.getUid());
         messageRecycleView = findViewById(R.id.messageRecycleView);
         messageRecycleView.setAdapter(chatAdapter);
+//        scrollListener();
         loadMessage();
     }
 
@@ -101,6 +108,7 @@ public class UserChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         senderRoom = firebaseUser.getUid()+uid_receiver;
         receiverRoom = uid_receiver+firebaseUser.getUid();
         DatabaseReference messageSentRef = database.getReference(Constants.KEY_COLLECTION_CHAT).child(senderRoom);
@@ -109,6 +117,11 @@ public class UserChatActivity extends AppCompatActivity {
         assert messageid != null;
         ChatMessage messageSent = new ChatMessage();
         messageSent.senderId = firebaseUser.getUid();
+        try {
+            messageSent.dateObj = format.parse(getTimeCurrent());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         messageSent.dateTime = getTimeCurrent();
         messageSent.receiverId = uid_receiver;
         messageSent.conversionId = messageid;
@@ -117,6 +130,7 @@ public class UserChatActivity extends AppCompatActivity {
         ChatMessage messageRev = new ChatMessage();
         messageRev.senderId = firebaseUser.getUid();
         messageRev.receiverId = uid_receiver;
+        messageRev.dateObj = messageSent.dateObj;
         messageRev.dateTime = getTimeCurrent();
         messageRev.conversionId = messageid;
         messageRev.message = inputMessage.getText().toString().trim();
@@ -134,6 +148,8 @@ public class UserChatActivity extends AppCompatActivity {
                 chatMessages.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                    assert message != null;
+                    message.avtReceiver = avtReceiver;
                     chatMessages.add(message);
                 }
                 if (chatMessages.size() > 0) {
@@ -154,4 +170,5 @@ public class UserChatActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         return format.format(date);
     }
+
 }

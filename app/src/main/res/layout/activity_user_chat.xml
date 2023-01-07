@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="70dp"
+
         android:id="@+id/messageRecycleView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"/>
@@ -56,7 +57,7 @@
         android:layout_alignParentBottom="true"
         >
         <EditText
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
@@ -64,7 +65,10 @@
             android:textColor="@color/black"
             android:padding="8dp"
             android:maxHeight="100dp"
+            android:fontFamily="@font/extra_light"
             android:id="@+id/inputMessage"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="60dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/background_input"/>
         <ImageView
@@ -74,7 +78,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:id="@+id/sent"
-            android:layout_toEndOf="@+id/inputMessage"/>
+            android:id="@+id/sent" />
     </RelativeLayout>
 </RelativeLayout>

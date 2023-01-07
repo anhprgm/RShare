@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/recentChat"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/user_blank_img"
+        app:riv_oval="true"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:id="@+id/avt"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"/>
+    <LinearLayout
+        android:layout_toEndOf="@+id/avt"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="13dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:id="@+id/nameReceiver"
+            android:textSize="20sp" />
+        <TextView
+            android:layout_marginTop="1dp"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="message"
+            android:id="@+id/last_message"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+</RelativeLayout>

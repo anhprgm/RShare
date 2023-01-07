@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:gravity="start"
     android:layout_height="wrap_content">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:scaleType="centerCrop"
+        android:layout_width="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="35dp"
+        app:riv_oval="true"
+        android:id="@+id/avtReceiver"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="250dp"
+        android:layout_marginTop="5dp"
         android:id="@+id/message"
+        android:layout_marginRight="10dp"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:layout_marginStart="5dp"
-        android:padding="5dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:fontFamily="@font/extra_light"
         android:layout_marginEnd="5dp"
         android:background="@drawable/background_receiver"/>
     <TextView
@@ -23,6 +37,7 @@
         android:layout_height="wrap_content"
         android:textSize="10sp"
         android:id="@+id/time"
+        android:visibility="gone"
         android:textColor="@color/hintTextColor"
         android:text="time" />
 </LinearLayout>
