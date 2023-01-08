@@ -2,7 +2,6 @@ package com.theanhdev.rshare.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -10,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.collection.LLRBNode;
-import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.databinding.RecentChatContainerBinding;
 import com.theanhdev.rshare.listeners.UsersListener;
 import com.theanhdev.rshare.models.RecentChat;
@@ -19,9 +16,8 @@ import com.theanhdev.rshare.models.RecentChat;
 import java.util.List;
 
 public class RecentChatAdapter extends RecyclerView.Adapter<RecentChatAdapter.RecentChatViewHolder> {
-    private List<RecentChat> recentChats;
-    private UsersListener usersListener;
-    String uid;
+    private final List<RecentChat> recentChats;
+    private final UsersListener usersListener;
 
     public RecentChatAdapter(List<RecentChat> recentChats, UsersListener usersListener) {
         this.recentChats = recentChats;
@@ -58,13 +54,10 @@ public class RecentChatAdapter extends RecyclerView.Adapter<RecentChatAdapter.Re
 
         void setData(RecentChat message) {
             binding.nameReceiver.setText(message.name);
-            binding.lastMessage.setText(message.message);
+            if (message.message.isEmpty() && message.hasImage) {
+                binding.lastMessage.setText("Sent an image");
+            } else binding.lastMessage.setText(message.message);
             binding.avt.setImageBitmap(setImageBitmapString(message.avt));
-//            int red = android.graphics.Color.RED,
-//                    black = Color.BLACK;
-//            if (!message.seen) {
-//                binding.lastMessage.setTextColor(red);
-//            } else binding.lastMessage.setTextColor(black);
             binding.recentChat.setOnClickListener(view -> usersListener.OnClickRecentChat(message));
 
         }

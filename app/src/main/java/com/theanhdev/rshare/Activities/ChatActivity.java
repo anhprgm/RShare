@@ -1,15 +1,13 @@
 package com.theanhdev.rshare.Activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
-
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,16 +29,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity implements UsersListener {
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
-    private ImageView backBtn;
-    String TAG = "AAAB";
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    String TAG = "AABB";
     List<RecentChat> recentChats = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         RecyclerView userRecycleView = findViewById(R.id.userRecycleView);
-        backBtn = findViewById(R.id.backBtn);
+        ImageView backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(view -> onBackPressed());
         RecyclerView recentChatRecycleView = findViewById(R.id.recentChatRecycleView);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -61,8 +58,7 @@ public class ChatActivity extends AppCompatActivity implements UsersListener {
                     Users users = dataSnapshot.getValue(Users.class);
                     assert firebaseUser != null;
                     assert users != null;
-                    if (Objects.equals(users.uid, firebaseUser.getUid())) {
-                    } else {
+                    if (!Objects.equals(users.uid, firebaseUser.getUid())) {
                         ChatRef.child(FirebaseAuth.getInstance().getUid() + users.uid).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -73,11 +69,15 @@ public class ChatActivity extends AppCompatActivity implements UsersListener {
                                     ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
                                     if (count == 0) {
                                         RecentChat recentChat = new RecentChat();
+                                        assert chatMessage != null;
                                         recentChat.message = chatMessage.message;
                                         recentChat.uid_receiver = users.uid;
                                         recentChat.name = users.UserName;
                                         recentChat.avt = users.UserImage;
                                         recentChat.date = chatMessage.dateObj;
+                                        if (chatMessage.image.isEmpty()) {
+                                            recentChat.hasImage = false;
+                                        } else recentChat.hasImage = true;
                                         RecentChatRef.child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(users.uid).setValue(recentChat);
                                     }
                                 }

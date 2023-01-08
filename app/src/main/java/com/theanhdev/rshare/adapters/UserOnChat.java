@@ -56,7 +56,6 @@ public class UserOnChat extends RecyclerView.Adapter<UserOnChat.UserViewHolder> 
             if (users.UserImage.equals("")) {
                 binding.avt.setImageResource(R.drawable.user_blank_img);
             } else binding.avt.setImageBitmap(getBitmapImage(users.UserImage));
-
             binding.userName.setText(users.UserName);
             binding.avt.setOnClickListener(v -> usersListener.OnClickUser(users));
         }

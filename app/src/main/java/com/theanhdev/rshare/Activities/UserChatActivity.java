@@ -1,21 +1,26 @@
 package com.theanhdev.rshare.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,33 +32,55 @@ import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.ChatAdapter;
-import com.theanhdev.rshare.funtionUsing.Funtion;
 import com.theanhdev.rshare.models.ChatMessage;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class UserChatActivity extends AppCompatActivity {
     private String uid_receiver;
-    private RoundedImageView avt;
+    private RoundedImageView avt, imagePicked;
     private TextView UserName;
     private EditText inputMessage;
-    private ImageView backBtn, sent;
+    private ImageView backBtn, sent, imagePick;
+    String encodedImage = "";
     RecyclerView messageRecycleView;
     String avtReceiver = "";
-    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    private final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     private String senderRoom, receiverRoom;
     List<ChatMessage> chatMessages;
     ChatAdapter chatAdapter;
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // get the content of both the edit text
+            String string = inputMessage.getText().toString();
+
+            // check whether both the fields are empty or not
+            sent.setEnabled(!string.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +120,10 @@ public class UserChatActivity extends AppCompatActivity {
         messageRecycleView.setAdapter(chatAdapter);
 //        scrollListener();
         loadMessage();
+        imagePick.setOnClickListener(v -> {
+            openImagePicker();
+        });
+        inputMessage.addTextChangedListener(textWatcher);
     }
 
     private void binding() {
@@ -101,11 +132,9 @@ public class UserChatActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         inputMessage = findViewById(R.id.inputMessage);
         sent = findViewById(R.id.sent);
+        imagePick = findViewById(R.id.imagePick);
     }
-    public Bitmap setImageBitmap(String encodedImage){
-        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
+
 
     private void sendMessage() {
         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
@@ -125,6 +154,7 @@ public class UserChatActivity extends AppCompatActivity {
         messageSent.dateTime = getTimeCurrent();
         messageSent.receiverId = uid_receiver;
         messageSent.conversionId = messageid;
+        messageSent.image = encodedImage;
         messageSent.message = inputMessage.getText().toString().trim();
         messageSentRef.child(messageid).setValue(messageSent).addOnCompleteListener(task -> inputMessage.setText(""));
         ChatMessage messageRev = new ChatMessage();
@@ -133,6 +163,7 @@ public class UserChatActivity extends AppCompatActivity {
         messageRev.dateObj = messageSent.dateObj;
         messageRev.dateTime = getTimeCurrent();
         messageRev.conversionId = messageid;
+        messageRev.image = encodedImage;
         messageRev.message = inputMessage.getText().toString().trim();
         messageReceiveRef.child(messageid).setValue(messageRev);
     }
@@ -165,10 +196,55 @@ public class UserChatActivity extends AppCompatActivity {
         });
     }
 
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result ->{
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        try {
+                            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                            Log.d("Original   dimensions", bitmap.getWidth()+" "+bitmap.getHeight());
+                            encodedImage = encodeImage(bitmap);
+                            Log.d("encode string", encodedImage + encodedImage.length());
+                            imagePicked = findViewById(R.id.imagePicked);
+                            loadImage(imagePicked);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Cancelled",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
     public String getTimeCurrent() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         return format.format(date);
     }
-
+    private String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOutputStream);
+        Log.d("Compressed dimensions xxx", bitmap.getWidth()+" "+bitmap.getHeight());
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        pickImage.launch(intent);
+    }
+    public Bitmap setImageBitmap(String encodedImage){
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+    private void loadImage(RoundedImageView image) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        image.setImageBitmap(bitmap);
+        Log.d("Compressed dimensions", bitmap.getWidth()+" "+bitmap.getHeight());
+    }
 }

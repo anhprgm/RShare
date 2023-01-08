@@ -20,6 +20,7 @@ import com.theanhdev.rshare.databinding.MessageSenderContainerBinding;
 import com.theanhdev.rshare.models.ChatMessage;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<ChatMessage> chatMessages;
@@ -82,6 +83,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void setData(ChatMessage chatMessage) {
             binding.message.setText(chatMessage.message);
+            if (chatMessage.message.isEmpty()) {
+                binding.message.setVisibility(View.GONE);
+            } else binding.message.setVisibility(View.VISIBLE);
+            if (Objects.equals(chatMessage.image, "")) {
+                binding.imageSender.setVisibility(View.GONE);
+            } else {
+                binding.imageSender.setVisibility(View.VISIBLE);
+                binding.imageSender.setImageBitmap(setImageBitmapString(chatMessage.image));
+            }
         }
     }
 
@@ -98,6 +108,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (!chatMessages.get(pos - 1).receiverId.equals(chatMessage.receiverId))
                     binding.avtReceiver.setImageBitmap(setImageBitmapString(chatMessage.avtReceiver));
             } else binding.avtReceiver.setImageBitmap(setImageBitmapString(chatMessage.avtReceiver));
+
+            if (chatMessage.message.isEmpty()) {
+                binding.message.setVisibility(View.GONE);
+            } else binding.message.setVisibility(View.VISIBLE);
+            if (Objects.equals(chatMessage.image, "")) {
+                binding.imageReceived.setVisibility(View.GONE);
+            } else {
+                binding.imageReceived.setVisibility(View.VISIBLE);
+                binding.imageReceived.setImageBitmap(setImageBitmapString(chatMessage.image));
+            }
         }
     }
 
