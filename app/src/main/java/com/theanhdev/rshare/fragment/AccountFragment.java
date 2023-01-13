@@ -39,6 +39,7 @@ import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
 import com.theanhdev.rshare.funtionUsing.Funtion;
 import com.theanhdev.rshare.listeners.PostListener;
+import com.theanhdev.rshare.models.PostInf;
 import com.theanhdev.rshare.models.Posts;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
@@ -60,7 +61,7 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment implements PostListener {
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -115,7 +116,6 @@ public class AccountFragment extends Fragment implements PostListener {
         RecyclerView recyclerPostUser = view.findViewById(R.id.recyclePostUser);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
         DatabaseReference usersRef = database.getReference().child(Constants.KEY_LIST_USERS);
         DatabaseReference postsRef = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
 
@@ -139,6 +139,7 @@ public class AccountFragment extends Fragment implements PostListener {
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postsList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     //get user info and break;
                     Users users = dataSnapshot.getValue(Users.class);
@@ -151,10 +152,12 @@ public class AccountFragment extends Fragment implements PostListener {
                         postsRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                postsList.clear();
                                 for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                     //load post user
                                     Posts posts = dataSnapshot1.getValue(Posts.class);
                                     assert posts != null;
+                                    posts.love = false;
                                     if (id.equals(posts.uid)) {
                                         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
                                         try {
@@ -230,9 +233,6 @@ public class AccountFragment extends Fragment implements PostListener {
 
     @Override
     public void onPostClicked(Posts posts) {
-        Intent intent = new Intent(getActivity(), OpenImageActivity.class);
-        intent.putExtra(Constants.KEY_IMAGE, posts.image);
-        startActivity(intent);
     }
 
     @Override
@@ -241,12 +241,13 @@ public class AccountFragment extends Fragment implements PostListener {
     }
 
     @Override
-    public void onDelBtn(Posts posts) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE).getReference().child(Constants.KEY_COLLECTION_POSTS);
-        databaseReference.child(posts.idPost).removeValue().addOnCompleteListener(task -> {
-            Toast.makeText(getActivity(), "ok", Toast.LENGTH_SHORT).show();
-        });
-        Log.d("AAA", posts.idPost);
+    public void onLoveBtn(Posts posts) {
+        DatabaseReference PostRef = database.getReference(Constants.KEY_COLLECTION_POSTS).child(posts.idPost);
+        PostInf postInf = new PostInf();
+        postInf.uidLovePost = FirebaseAuth.getInstance().getUid();
+        if (posts.love) PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).removeValue();
+        else PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).setValue(postInf);
     }
+
 
 }

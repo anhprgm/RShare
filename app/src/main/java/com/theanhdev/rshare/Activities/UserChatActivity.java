@@ -71,9 +71,8 @@ public class UserChatActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             // get the content of both the edit text
             String string = inputMessage.getText().toString();
-
             // check whether both the fields are empty or not
-            sent.setEnabled(!string.isEmpty());
+            sent.setEnabled(!string.isEmpty() || !encodedImage.isEmpty());
         }
 
         @Override
@@ -112,7 +111,11 @@ public class UserChatActivity extends AppCompatActivity {
 
             }
         });
-        sent.setOnClickListener(v -> sendMessage());
+        sent.setOnClickListener(v -> {
+            imagePicked = findViewById(R.id.imagePicked);
+            imagePicked.setVisibility(View.GONE);
+            sendMessage();
+        });
         //set Adapter
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(chatMessages, firebaseUser.getUid());
@@ -209,6 +212,7 @@ public class UserChatActivity extends AppCompatActivity {
                             encodedImage = encodeImage(bitmap);
                             Log.d("encode string", encodedImage + encodedImage.length());
                             imagePicked = findViewById(R.id.imagePicked);
+                            imagePicked.setVisibility(View.VISIBLE);
                             loadImage(imagePicked);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();

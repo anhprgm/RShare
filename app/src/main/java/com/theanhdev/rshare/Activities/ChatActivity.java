@@ -71,6 +71,7 @@ public class ChatActivity extends AppCompatActivity implements UsersListener {
                                         RecentChat recentChat = new RecentChat();
                                         assert chatMessage != null;
                                         recentChat.message = chatMessage.message;
+                                        recentChat.uid_sender = chatMessage.receiverId;
                                         recentChat.uid_receiver = users.uid;
                                         recentChat.name = users.UserName;
                                         recentChat.avt = users.UserImage;

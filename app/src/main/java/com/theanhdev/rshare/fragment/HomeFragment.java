@@ -1,6 +1,5 @@
 package com.theanhdev.rshare.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,8 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Base64;
@@ -19,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,12 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.Activities.ChatActivity;
 import com.theanhdev.rshare.Activities.LoginActivity;
 import com.theanhdev.rshare.Activities.MakePostActivity;
-import com.theanhdev.rshare.Activities.OpenImageActivity;
-import com.theanhdev.rshare.Activities.WallUserActivity;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
 import com.theanhdev.rshare.listeners.PostListener;
+import com.theanhdev.rshare.models.PostInf;
 import com.theanhdev.rshare.models.Posts;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
@@ -43,9 +39,9 @@ import com.theanhdev.rshare.ulities.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -54,7 +50,9 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment implements PostListener {
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    List<Posts> postsList = new ArrayList<>();
+    RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,7 +97,6 @@ public class HomeFragment extends Fragment implements PostListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
         DatabaseReference postsRef = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
         DatabaseReference usersRef = database.getReference().child(Constants.KEY_LIST_USERS);
 
@@ -117,9 +114,7 @@ public class HomeFragment extends Fragment implements PostListener {
             startActivity(intent);
         });
 
-        List<Posts> postsList = new ArrayList<>();
         List<Users> usersList = new ArrayList<>();
-        RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
         recyclerView.setAdapter(rhomeAdapter);
 
         usersRef.addValueEventListener(new ValueEventListener() {
@@ -136,40 +131,53 @@ public class HomeFragment extends Fragment implements PostListener {
                             postsList.clear();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 Posts posts = dataSnapshot.getValue(Posts.class);
+                                assert posts != null;
+                                posts.love = false;
                                 for (Users users : usersList) {
                                     assert posts != null;
                                     if (Objects.equals(users.uid, posts.uid)) {
-                                        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+                                        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
                                         try {
                                             Date current = format.parse(getTimeCurrent());
-                                            Date timePost = format.parse(posts.timeStamp);
+                                            Date timePost = posts.dateObject;
                                             assert current != null;
                                             assert timePost != null;
                                             long diff = current.getTime() - timePost.getTime();
                                             int timeInSeconds = (int) (diff / 1000);
-                                            int hours, minutes, seconds, days;
+                                            int hours, minutes, seconds, days, weeks, months, years;
                                             hours = timeInSeconds / 3600;
                                             timeInSeconds = timeInSeconds - (hours * 3600);
                                             minutes = timeInSeconds / 60;
                                             timeInSeconds = timeInSeconds - (minutes * 60);
                                             seconds = timeInSeconds;
                                             days = hours / 24;
-                                            if (days < 24) {
-                                                if (hours > 1) {
-                                                    posts.timeStamp = hours + "h";
-                                                } else {
-                                                    if (minutes > 0) {
-                                                        posts.timeStamp = minutes + "m";
-                                                    } else {
-                                                        posts.timeStamp = seconds + "s";
-                                                    }
-                                                }
-                                            } else posts.timeStamp = days + " day";
+                                            weeks = days / 7;
+                                            months = days / 30;
+                                            years = months / 12;
+                                            if (years < 1){
+                                                if (months < 1) {
+                                                    if (days < 7) {
+                                                        if (hours < 24) {
+                                                            if (hours > 1) {
+                                                                posts.timeStamp = hours + "h";
+                                                            } else {
+                                                                if (minutes > 0) {
+                                                                    posts.timeStamp = minutes + "m";
+                                                                } else {
+                                                                    posts.timeStamp = seconds + "s";
+                                                                }
+                                                            }
+                                                        } else posts.timeStamp = days + " day";
+                                                    } else posts.timeStamp = weeks + " week";
+                                                } else posts.timeStamp = months + " month";
+                                            } else posts.timeStamp = years + " year";
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }
+
                                         posts.userName = users.UserName;
                                         posts.userImage = users.UserImage;
+                                        break;
                                     }
                                 }
                                 postsList.add(posts);
@@ -197,6 +205,7 @@ public class HomeFragment extends Fragment implements PostListener {
             }
         });
 
+
         addPost.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MakePostActivity.class);
             startActivity(intent);
@@ -215,27 +224,28 @@ public class HomeFragment extends Fragment implements PostListener {
     }
     @Override
     public void onPostClicked(Posts posts) {
-//        Intent intent = new Intent(getActivity(), OpenImageActivity.class);
-//        intent.putExtra(Constants.KEY_IMAGE, posts.image);
-//        startActivity(intent);
+        DatabaseReference PostRef = database.getReference(Constants.KEY_COLLECTION_POSTS).child(posts.idPost);
+        PostInf postInf = new PostInf();
+        postInf.uidLovePost = FirebaseAuth.getInstance().getUid();
+        PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).setValue(postInf);
     }
 
     @Override
     public void onUserImageClicked(Posts posts) {
-//        Intent intent = new Intent(getActivity(), WallUserActivity.class);
-//        intent.putExtra(Constants.UID_POST, posts.uid);
-//        startActivity(intent);
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.putExtra(Constants.KEY_USER_ID, posts.uid);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
     }
 
     @Override
-    public void onDelBtn(Posts posts) {
-
+    public void onLoveBtn(Posts posts) {
+        DatabaseReference PostRef = database.getReference(Constants.KEY_COLLECTION_POSTS).child(posts.idPost);
+        PostInf postInf = new PostInf();
+        postInf.uidLovePost = FirebaseAuth.getInstance().getUid();
+        if (posts.love) PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).removeValue();
+        else PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).setValue(postInf);
     }
+
 
     private Bitmap getUserImage(String encodedImage){
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
@@ -244,7 +254,7 @@ public class HomeFragment extends Fragment implements PostListener {
 
     private String getTimeCurrent() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         return format.format(date);
     }
 

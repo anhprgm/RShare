@@ -59,7 +59,7 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,35 +76,78 @@
             android:layout_marginBottom="10dp"
             android:textColorHint="@color/hintTextColor"
             android:background="@android:color/transparent"/>
-
         <ImageView
             android:scaleType="centerCrop"
+            android:layout_below="@+id/caption"
             android:background="@color/hintTextColor"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:id="@+id/imagePost"
             android:contentDescription="ur image" />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/loveAnim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imagePost"
+            android:layout_alignBottom="@+id/imagePost"
+            android:padding="120dp"
+            android:fadingEdge="vertical"
+            android:visibility="gone"
+            android:src="@drawable/love_fill"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
         android:layout_below="@+id/postLayout"
         android:orientation="horizontal">
-        <ImageButton
+        <ImageView
+            android:layout_marginStart="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/love"
+            android:src="@drawable/love_48px"
+            android:layout_marginTop="2dp"/>
+        <TextView
             android:layout_width="wrap_content"
-            android:src="@drawable/account"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
-        <ImageButton
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/totalLove"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="5dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/comment"
+            android:src="@drawable/mode_comment"
+            android:layout_marginTop="2dp" />
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <ImageButton
-            android:id="@+id/del"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/totalComment"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="5dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/share_48px"
+            android:layout_marginTop="2dp"
+            android:id="@+id/share"/>
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/account"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/totalShare"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="5dp"/>
     </LinearLayout>
 </RelativeLayout>

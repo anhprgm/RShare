@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
+import com.theanhdev.rshare.models.Posts;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
@@ -36,6 +37,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 public class UserCustomActivity extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -72,25 +78,41 @@ public class UserCustomActivity extends AppCompatActivity {
         String tagName = Utag.getText().toString().trim();
         String bio     = Ubio.getText().toString().trim();
         DatabaseReference UserRef = database.getReference().child(Constants.KEY_LIST_USERS);
-        UserRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference PostRef = database.getReference().child(Constants.KEY_COLLECTION_POSTS);
+        String idPost = PostRef.push().getKey();
+        UserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Users users = dataSnapshot.getValue(Users.class);
                     assert users != null;
                     if (users.uid.equals(user.getUid())) {
-                        users.UserImage = encodedImage;
-                        users.UserName = name;
-                        users.tagName = tagName;
-                        users.bio = bio;
-                        UserRef.child(users.uid).setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(UserCustomActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(UserCustomActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                        if (!encodedImage.isEmpty()) users.UserImage = encodedImage;
+                        if (!name.isEmpty()) users.UserName = name;
+                        if (!tagName.isEmpty()) users.tagName = tagName;
+                        if (!bio.isEmpty()) users.bio = bio;
+                        UserRef.child(users.uid).setValue(users).addOnCompleteListener(task -> {
+                            SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
+                            //make a post when user update avt
+
+                            Toast.makeText(UserCustomActivity.this, "success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(UserCustomActivity.this, MainActivity.class);
+                            Posts posts = new Posts();
+                            posts.idPost = idPost;
+                            posts.caption = "Update new Avt";
+                            posts.timeStamp = getTimeCurrent();
+                            posts.uid = FirebaseAuth.getInstance().getUid();
+                            try {
+                                posts.dateObject = format.parse(getTimeCurrent());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
+                            posts.image = encodedImage;
+                            PostRef.child(posts.idPost).setValue(posts).addOnCompleteListener(v -> {
+                                Toast.makeText(UserCustomActivity.this, "successPost", Toast.LENGTH_SHORT).show();
+                            });
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         });
                         break;
                     }
@@ -140,5 +162,12 @@ public class UserCustomActivity extends AppCompatActivity {
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         userImage.setImageBitmap(bitmap);
+    }
+
+
+    private String getTimeCurrent() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
+        return format.format(date);
     }
 }
