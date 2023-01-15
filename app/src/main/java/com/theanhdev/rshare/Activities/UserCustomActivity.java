@@ -1,10 +1,5 @@
 package com.theanhdev.rshare.Activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,11 +10,13 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,29 +31,26 @@ import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
 public class UserCustomActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
-    private FirebaseUser user = mAuth.getCurrentUser();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
+    private final FirebaseUser user = mAuth.getCurrentUser();
     private String encodedImage = "";
-    private TextView save;
-    private ImageView back, userImage;
+    private ImageView userImage;
     private EditText Uname, Ubio, Utag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        back = findViewById(R.id.backBtn);
-        save = findViewById(R.id.save);
+        ImageView back = findViewById(R.id.backBtn);
+        ImageView save = findViewById(R.id.save);
         Uname = findViewById(R.id.UserNameInput);
         Ubio = findViewById(R.id.userBioInput);
         Utag = findViewById(R.id.userTagNameInput);

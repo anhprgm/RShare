@@ -3,7 +3,8 @@ package com.theanhdev.rshare.ulities;
 public class Constants {
 
     public static final String KEY_LIST_USERS = "list_users";
-    public static final String KEY_FIREBASE = "https://rshare-52ded-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    public static final String KEY_FIREBASE_REALTIME = "https://rshare-52ded-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    public static final String KEY_FIREBASE_STORAGE = "gs://rshare-52ded.appspot.com/";
     public static final String KEY_USER_RECEIVER = "user_receiver";
     public static final String KEY_POST_INF = "post_inf";
     public static final String KEY_LOVE = "love";

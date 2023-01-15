@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,7 +73,7 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
                 binding.avt.setImageResource(R.drawable.user_blank_img);
             } else binding.avt.setImageBitmap(getBitmapImage(posts.userImage));
 
-            DatabaseReference PostInfRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE).getReference(Constants.KEY_COLLECTION_POSTS);
+            DatabaseReference PostInfRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference(Constants.KEY_COLLECTION_POSTS);
             PostInfRef.child(posts.idPost).child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

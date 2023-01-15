@@ -4,11 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,18 +48,14 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment implements PostListener {
-    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
     List<Posts> postsList = new ArrayList<>();
     RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private String TAG = "AAA";
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private String encodedImage;
+    private final String TAG = "AAA";
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -88,8 +82,9 @@ public class HomeFragment extends Fragment implements PostListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // TODO: Rename and change types of parameters
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -134,7 +129,6 @@ public class HomeFragment extends Fragment implements PostListener {
                                 assert posts != null;
                                 posts.love = false;
                                 for (Users users : usersList) {
-                                    assert posts != null;
                                     if (Objects.equals(users.uid, posts.uid)) {
                                         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
                                         try {
@@ -217,11 +211,7 @@ public class HomeFragment extends Fragment implements PostListener {
 
         return view;
     }
-    void isLoading(boolean isLoading) {
-        ProgressBar progressBar = requireView().findViewById(R.id.progress_bar);
-        if (isLoading) progressBar.setVisibility(View.VISIBLE);
-        else progressBar.setVisibility(View.GONE);
-    }
+
     @Override
     public void onPostClicked(Posts posts) {
         DatabaseReference PostRef = database.getReference(Constants.KEY_COLLECTION_POSTS).child(posts.idPost);

@@ -12,7 +12,7 @@ import com.theanhdev.rshare.funtionUsing.Funtion;
 import com.theanhdev.rshare.ulities.Constants;
 
 public class OpenImageActivity extends AppCompatActivity {
-    private String TAG = "OPEN_IMAGE";
+    private final String TAG = "OPEN_IMAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

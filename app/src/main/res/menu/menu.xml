@@ -4,24 +4,24 @@
         android:id="@+id/home"
         android:enabled="true"
 
-        android:title="Home"
-        android:icon="@drawable/home"/>
+        android:title=""
+        android:icon="@drawable/ic_home_svg"/>
     <item
         android:id="@+id/search"
         android:enabled="true"
-        android:title="Search"
-        android:icon="@drawable/search"/>
+        android:title=""
+        android:icon="@drawable/ic_search_svg"/>
     <item
         android:id="@+id/rvideo"
         android:enabled="true"
-        android:title="RVid"
-        android:icon="@drawable/rvid"/>
+        android:title=""
+        android:icon="@drawable/ic_camera_video_svg"/>
     <item android:id="@+id/notification"
         android:enabled="true"
-        android:title="Notification"
-        android:icon="@drawable/notification"/>
+        android:title=""
+        android:icon="@drawable/ic_noti_bell_svg"/>
     <item android:id="@+id/Me"
-        android:icon="@drawable/account"
-        android:title="Me"
+        android:icon="@drawable/ic_user_svg"
+        android:title=""
         android:enabled="true"/>
 </menu>

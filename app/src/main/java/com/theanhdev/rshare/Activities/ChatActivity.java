@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity implements UsersListener {
-    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
     String TAG = "AABB";
     List<RecentChat> recentChats = new ArrayList<>();
     @Override
@@ -76,9 +76,7 @@ public class ChatActivity extends AppCompatActivity implements UsersListener {
                                         recentChat.name = users.UserName;
                                         recentChat.avt = users.UserImage;
                                         recentChat.date = chatMessage.dateObj;
-                                        if (chatMessage.image.isEmpty()) {
-                                            recentChat.hasImage = false;
-                                        } else recentChat.hasImage = true;
+                                        recentChat.hasImage = !chatMessage.image.isEmpty();
                                         RecentChatRef.child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(users.uid).setValue(recentChat);
                                     }
                                 }

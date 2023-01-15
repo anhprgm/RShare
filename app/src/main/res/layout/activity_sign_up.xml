@@ -35,14 +35,12 @@
             android:fontFamily="@font/extra_light"
             android:layout_marginTop="20dp"
             android:textColor="@color/black"/>
-        <TextView
+        <ImageView
             android:id="@+id/save"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:text="DONE"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:gravity="center"
-            android:textColor="@color/hintTextColor"
-            android:background="@drawable/background_input"
+            android:src="@drawable/ic_circle_success_svg"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"/>
@@ -58,7 +56,7 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/account"
+            android:src="@drawable/ic_user_svg"
             android:id="@+id/userImage"
             android:scaleType="centerCrop"
             android:layout_gravity="top|center" />

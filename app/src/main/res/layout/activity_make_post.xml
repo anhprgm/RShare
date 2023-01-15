@@ -31,7 +31,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:background="@drawable/circle_background"
-            android:src="@drawable/account"/>
+            android:src="@drawable/ic_user_svg"/>
         <TextView
             android:layout_toEndOf="@+id/avt"
             android:layout_width="wrap_content"
@@ -44,15 +44,14 @@
             android:layout_marginStart="10dp"
             android:layout_centerVertical="true"/>
 
-        <TextView
-            android:layout_width="70dp"
+        <ImageView
+            android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/background_input"
             android:text="Post"
+            android:src="@drawable/ic_circle_success_svg"
             android:fontFamily="@font/extra_light"
             android:id="@+id/savePost"
             android:gravity="center"
-            android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
@@ -109,14 +108,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/add_a_photo"
+                android:src="@drawable/ic_camera_svg"
                 android:id="@+id/openCam"
                 android:contentDescription="shot image" />
             <ImageView
                 android:layout_marginStart="10dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_photo"
+                android:src="@drawable/ic_photo_svg"
                 android:id="@+id/openPhoto"
                 android:contentDescription="pick image" />
         </LinearLayout>

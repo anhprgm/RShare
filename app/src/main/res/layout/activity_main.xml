@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         app:itemIconSize="30dp"
+        style="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
         app:itemIconTint="@color/item_foreground"
         app:itemTextColor="@color/item_foreground"
         app:menu="@menu/menu" />

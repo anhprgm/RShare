@@ -3,25 +3,19 @@ package com.theanhdev.rshare.fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 
-import android.provider.ContactsContract;
-import android.service.autofill.Sanitizer;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,10 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.theanhdev.rshare.Activities.OpenImageActivity;
 import com.theanhdev.rshare.Activities.UserCustomActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
@@ -47,9 +38,6 @@ import com.theanhdev.rshare.ulities.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -61,7 +49,7 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment implements PostListener {
-    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -163,29 +151,38 @@ public class AccountFragment extends Fragment implements PostListener {
                                         try {
                                             Funtion funtion = new Funtion();
                                             Date current = format.parse(funtion.getTimeCurrent());
-                                            Date timePost = format.parse(posts.timeStamp);
+                                            Date timePost = posts.dateObject;
                                             assert current != null;
                                             assert timePost != null;
                                             long diff = current.getTime() - timePost.getTime();
                                             int timeInSeconds = (int) (diff / 1000);
-                                            int hours, minutes, seconds, days;
+                                            int hours, minutes, seconds, days, weeks, months, years;
                                             hours = timeInSeconds / 3600;
                                             timeInSeconds = timeInSeconds - (hours * 3600);
                                             minutes = timeInSeconds / 60;
                                             timeInSeconds = timeInSeconds - (minutes * 60);
                                             seconds = timeInSeconds;
                                             days = hours / 24;
-                                            if (days < 24) {
-                                                if (hours > 1) {
-                                                    posts.timeStamp = hours + "h";
-                                                } else {
-                                                    if (minutes > 0) {
-                                                        posts.timeStamp = minutes + "m";
-                                                    } else {
-                                                        posts.timeStamp = seconds + "s";
-                                                    }
-                                                }
-                                            } else posts.timeStamp = days + " day";
+                                            weeks = days / 7;
+                                            months = days / 30;
+                                            years = months / 12;
+                                            if (years < 1){
+                                                if (months < 1) {
+                                                    if (days < 7) {
+                                                        if (hours < 24) {
+                                                            if (hours > 1) {
+                                                                posts.timeStamp = hours + "h";
+                                                            } else {
+                                                                if (minutes > 0) {
+                                                                    posts.timeStamp = minutes + "m";
+                                                                } else {
+                                                                    posts.timeStamp = seconds + "s";
+                                                                }
+                                                            }
+                                                        } else posts.timeStamp = days + " day";
+                                                    } else posts.timeStamp = weeks + " week";
+                                                } else posts.timeStamp = months + " month";
+                                            } else posts.timeStamp = years + " year";
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }

@@ -48,14 +48,14 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/chivo_mono_medium_italic"
-            android:textColor="@color/blue_main"
+            android:textColor="@color/black"
             android:padding="5dp"/>
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="15dp"
             android:id="@+id/addPost"
-            android:src="@drawable/add_to_photos"
+            android:src="@drawable/ic_add_post_svg"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/chat"/>
         <ImageView
@@ -65,7 +65,7 @@
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/message_svgrepo_com"
+            android:src="@drawable/ic_message_svg"
             android:contentDescription="@string/app_name" />
     </RelativeLayout>
 

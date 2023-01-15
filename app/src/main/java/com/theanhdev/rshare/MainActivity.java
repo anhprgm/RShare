@@ -6,12 +6,16 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -47,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bundle bundle = getIntent().getExtras();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.menu);
+        Menu menu = bottomNavigationView.getMenu();
+        MenuItem UserImage = menu.findItem(R.id.Me);
         if (bundle == null) {
             loadFragment(new HomeFragment());
         } else {
@@ -56,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             accountFragment.setArguments(bundle2);
             loadFragment(accountFragment);
         }
-
         startService(new Intent(getApplicationContext(), MyService.class));
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     String token = task.getResult();
                     Log.d("FCM", token);
-                    DatabaseReference UserRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE).getReference();
+                    DatabaseReference UserRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference();
                     UserRef.child(Constants.KEY_LIST_USERS)
                             .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -84,10 +90,12 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                 });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.menu);
+
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
+
                     loadFragment(new HomeFragment());
                     break;
                 case R.id.search:
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         createNotificationChannel();
-        DatabaseReference conversationRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE).getReference(Constants.KEY_COLLECTION_CONVERSIONS).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
+        DatabaseReference conversationRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference(Constants.KEY_COLLECTION_CONVERSIONS).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
         conversationRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -146,9 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
-
 
 
     @Override
@@ -186,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
     private void pushNotification(String userName, String conversation) {
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(this, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.logorshare)
                 .setContentTitle(userName)
                 .setContentText(conversation)
@@ -196,6 +202,16 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManagerCompat =
                 NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         notificationManagerCompat.notify(1234, builder.build());
     }
     private void createNotificationChannel() {

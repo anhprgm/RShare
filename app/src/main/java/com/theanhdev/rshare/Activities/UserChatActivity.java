@@ -56,12 +56,12 @@ public class UserChatActivity extends AppCompatActivity {
     RecyclerView messageRecycleView;
     String avtReceiver = "";
     private final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
     private String senderRoom, receiverRoom;
     List<ChatMessage> chatMessages;
     ChatAdapter chatAdapter;
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

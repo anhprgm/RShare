@@ -45,15 +45,15 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MakePostActivity extends AppCompatActivity {
-    private ImageView openCamera, pickImageIc, image, backBtn, backImg, ImageOpen;
+    private ImageView openCamera, pickImageIc, image, backBtn, backImg, ImageOpen, SavePost;
     private RoundedImageView avt;
-    private TextView SavePost, UserName;
+    private TextView UserName;
     private EditText caption;
     private String encodedImage = "";
     private LinearLayout seeImage, postLayout;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private RelativeLayout userInf;
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE);
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
     private static final int pic_id = 127;
     private final int REQUEST_IMAGE_CAPTURE = 123;
     @Override
