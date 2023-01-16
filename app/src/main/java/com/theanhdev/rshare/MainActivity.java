@@ -7,10 +7,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -53,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         BottomNavigationView bottomNavigationView = findViewById(R.id.menu);
         Menu menu = bottomNavigationView.getMenu();
-        MenuItem UserImage = menu.findItem(R.id.Me);
+//        MenuItem UserImage = menu.findItem(R.id.Me);
         if (bundle == null) {
             loadFragment(new HomeFragment());
         } else {
@@ -64,50 +70,70 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(accountFragment);
         }
         startService(new Intent(getApplicationContext(), MyService.class));
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.d("FCM", "Fetching FCM registration token failed", task.getException());
-                        return;
-                    }
-                    String token = task.getResult();
-                    Log.d("FCM", token);
-                    DatabaseReference UserRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference();
-                    UserRef.child(Constants.KEY_LIST_USERS)
-                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Users users = snapshot.getValue(Users.class);
-                                    assert users != null;
-                                    users.fcm_token = token;
-                                    UserRef.child(Constants.KEY_LIST_USERS)
-                                            .child(FirebaseAuth.getInstance().getUid()).setValue(users);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                });
-
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(task -> {
+//                    if (!task.isSuccessful()) {
+//                        Log.d("FCM", "Fetching FCM registration token failed", task.getException());
+//                        return;
+//                    }
+//                    String token = task.getResult();
+//                    Log.d("FCM", token);
+//                    DatabaseReference UserRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference();
+//                    UserRef.child(Constants.KEY_LIST_USERS)
+//                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    Users users = snapshot.getValue(Users.class);
+//                                    assert users != null;
+//                                    users.fcm_token = token;
+//                                    UserRef.child(Constants.KEY_LIST_USERS)
+//                                            .child(FirebaseAuth.getInstance().getUid()).setValue(users);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                }
+//                            });
+//                });
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        Color.GRAY,
+                        Color.rgb(223, 20, 99)
+                }
+        );
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
-
+                    resetColor(bottomNavigationView);
                     loadFragment(new HomeFragment());
                     break;
                 case R.id.search:
+                    resetColor(bottomNavigationView);
                     loadFragment(new SearchFragment());
                     break;
                 case R.id.rvideo:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(ContextCompat.getColor(this, R.color.red_pink));
+                    }
+
+                    bottomNavigationView.setBackgroundColor(Color.BLACK);
+                    bottomNavigationView.setItemIconTintList(colorStateList);
                     loadFragment(new RvidFragment());
                     break;
                 case R.id.notification:
+                    resetColor(bottomNavigationView);
                     loadFragment(new NotiFragment());
                     break;
                 case R.id.Me:
+                    resetColor(bottomNavigationView);
                     Bundle bundle1 = new Bundle();
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     FirebaseUser user = mAuth.getCurrentUser();
@@ -254,5 +280,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+
+    private void resetColor(BottomNavigationView bottomNavigationView) {
+        bottomNavigationView.setBackgroundColor(Color.WHITE);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        Color.BLACK,
+                        Color.rgb(223, 20, 99)
+                }
+        );
+        bottomNavigationView.setItemIconTintList(colorStateList);
     }
 }

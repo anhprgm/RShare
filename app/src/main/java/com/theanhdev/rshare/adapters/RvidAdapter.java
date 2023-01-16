@@ -1,5 +1,6 @@
 package com.theanhdev.rshare.adapters;
 
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -54,7 +55,19 @@ public class RvidAdapter extends RecyclerView.Adapter<RvidAdapter.RvidViewHolder
 
         void setData(Video video) {
             binding.videoPlayer.setVideoPath(video.UrlVideo);
-            binding.videoPlayer.start();
+            binding.videoPlayer.setOnPreparedListener(mediaPlayer -> {
+                mediaPlayer.start();
+                float videoRatio = mediaPlayer.getVideoWidth() / (float) mediaPlayer.getVideoHeight();
+                float screenRatio = binding.videoPlayer.getWidth() / (float) binding.videoPlayer.getHeight();
+
+                float scale = videoRatio / screenRatio;
+                if (scale >= 1f) {
+                    binding.videoPlayer.setScaleX(scale);
+                } else {
+                    binding.videoPlayer.setScaleY(1f / scale);
+                }
+            });
+            binding.videoPlayer.setOnCompletionListener(MediaPlayer::start);
         }
     }
 }

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.RvidFragment">
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycleVideo"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/pageVideo"
+        android:isScrollContainer="false"
         android:orientation="vertical"/>
 </FrameLayout>

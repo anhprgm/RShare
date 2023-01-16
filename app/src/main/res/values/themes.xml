@@ -10,8 +10,15 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/red_pink</item>
         <!-- Customize your theme here. -->
         <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="FullScreen" parent="Theme.Design">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>

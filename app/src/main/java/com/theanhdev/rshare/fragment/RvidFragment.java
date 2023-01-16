@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -95,15 +96,18 @@ public class RvidFragment extends Fragment implements VideoListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         List<Video> videoList = new ArrayList<>();
+
+
+
         View view = inflater.inflate(R.layout.fragment_rvid, container, false);
         RvidAdapter rvidAdapter = new RvidAdapter(videoList, this);
-        RecyclerView recyclerView = view.findViewById(R.id.recycleVideo);
-        recyclerView.setAdapter(rvidAdapter);
+        ViewPager2 viewPager2 = view.findViewById(R.id.pageVideo);
+        viewPager2.setAdapter(rvidAdapter);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME);
         DatabaseReference storageRef = database.getReference(Constants.KEY_LIST_VIDEO);
 
-        StorageReference storageReference = storage.getReference().child("Video");
+        StorageReference storageReference = storage.getReference().child("video");
         storageReference.listAll().addOnSuccessListener(listResult -> {
 
             for (StorageReference item : listResult.getItems()) {
@@ -137,19 +141,6 @@ public class RvidFragment extends Fragment implements VideoListener {
 
             }
         });
-
-
-
-//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-//            String downloadUrl = uri.toString();
-//            Log.d("aaa", downloadUrl);
-//            videoView.setVideoPath(downloadUrl);
-//            videoView.canPause();
-//            videoView.setSoundEffectsEnabled(true);
-//            videoView.start();
-//        }).addOnFailureListener(e -> {
-//
-//        });
 
 
 
