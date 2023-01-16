@@ -8,6 +8,7 @@ public class Constants {
     public static final String KEY_USER_RECEIVER = "user_receiver";
     public static final String KEY_POST_INF = "post_inf";
     public static final String KEY_LOVE = "love";
+    public static final String KEY_LIST_VIDEO = "list_video";
 
     //-------------------
     public static final String KEY_COLLECTION_USERS = "users";
