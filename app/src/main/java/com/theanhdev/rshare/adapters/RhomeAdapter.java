@@ -67,6 +67,7 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
             binding.caption.setText(posts.caption);
             binding.imagePost.setImageBitmap(FuntionUsing.setImageBitmap(posts.image));
             binding.userName.setText(posts.userName);
+
             if (posts.userImage.equals("")) {
                 binding.avt.setImageResource(R.drawable.user_blank_img);
             } else binding.avt.setImageBitmap(FuntionUsing.setImageBitmap(posts.userImage));
