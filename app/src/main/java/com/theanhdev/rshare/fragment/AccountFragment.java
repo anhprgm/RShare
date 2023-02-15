@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,10 +26,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.theanhdev.rshare.Activities.ChatActivity;
+import com.theanhdev.rshare.Activities.UserChatActivity;
 import com.theanhdev.rshare.Activities.UserCustomActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
-import com.theanhdev.rshare.funtionUsing.Funtion;
+import com.theanhdev.rshare.funtionUsing.FuntionUsing;
 import com.theanhdev.rshare.listeners.PostListener;
 import com.theanhdev.rshare.models.PostInf;
 import com.theanhdev.rshare.models.Posts;
@@ -112,7 +115,14 @@ public class AccountFragment extends Fragment implements PostListener {
         String id = getArguments().getString(Constants.KEY_USER_ID);
         assert user != null;
         Log.d("AAA", id + "\n" +user.getUid());
-
+        inbox.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserChatActivity.class);
+            intent.putExtra(Constants.KEY_USER_RECEIVER, id);
+            startActivity(intent);
+        });
+        follow.setOnClickListener(v -> {
+            usersRef.child(user.getUid()).setValue(Constants.KEY_LIST_USER_FOLLOWERS);
+        });
         //if id == uid hide inbox
         inbox.setVisibility(View.VISIBLE);
         follow.setVisibility(View.VISIBLE);
@@ -149,8 +159,7 @@ public class AccountFragment extends Fragment implements PostListener {
                                     if (id.equals(posts.uid)) {
                                         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
                                         try {
-                                            Funtion funtion = new Funtion();
-                                            Date current = format.parse(funtion.getTimeCurrent());
+                                            Date current = format.parse(FuntionUsing.getTimeCurrent());
                                             Date timePost = posts.dateObject;
                                             assert current != null;
                                             assert timePost != null;

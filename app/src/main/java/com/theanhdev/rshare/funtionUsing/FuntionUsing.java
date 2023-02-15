@@ -3,6 +3,7 @@ package com.theanhdev.rshare.funtionUsing;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -12,23 +13,24 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
-public class Funtion {
+public class FuntionUsing {
     final String resource = "ABCDEFGHJKLMOPQRSTUVWXYZ1234567890";
     final Set<String> Name = new HashSet<String>();
-    public Bitmap setImageBitmap(String encodedImage){
+    public static Bitmap setImageBitmap(String encodedImage){
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
-    public String getTimeCurrent() {
+    public static String getTimeCurrent() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.getDefault());
         return format.format(date);
     }
-    public String encodeImage(@NonNull Bitmap bitmap){
+    public static String encodeImage(@NonNull Bitmap bitmap){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         Log.d("Compressed dimensions xxx", bitmap.getWidth()+" "+bitmap.getHeight());

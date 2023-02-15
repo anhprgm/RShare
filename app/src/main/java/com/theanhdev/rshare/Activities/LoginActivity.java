@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
-import com.theanhdev.rshare.funtionUsing.Funtion;
+import com.theanhdev.rshare.funtionUsing.FuntionUsing;
 import com.theanhdev.rshare.models.Users;
 import com.theanhdev.rshare.ulities.Constants;
 
@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout inputUser, MadeBy;
     private TextView SignBtn, SignText;
     private ProgressBar progressBar;
-    private Funtion funtion;
+    private FuntionUsing funtion;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private EditText EmailInput, PasswordInput, ConfirmPasswordInput;
     private String CODE_SIGN = "login", email, password, confirm_password;

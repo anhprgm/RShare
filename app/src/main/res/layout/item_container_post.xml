@@ -101,6 +101,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/react_Layout"
         android:layout_below="@+id/postLayout"
         android:orientation="horizontal">
         <ImageView
@@ -149,5 +150,19 @@
             android:textColor="@color/black"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="5dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/bottom"
+        android:layout_below="@+id/react_Layout"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            android:id="@+id/cmt_recycleView"/>
     </LinearLayout>
 </RelativeLayout>

@@ -2,13 +2,11 @@ package com.theanhdev.rshare.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.theanhdev.rshare.R;
-import com.theanhdev.rshare.funtionUsing.Funtion;
+import com.theanhdev.rshare.funtionUsing.FuntionUsing;
 import com.theanhdev.rshare.ulities.Constants;
 
 public class OpenImageActivity extends AppCompatActivity {
@@ -17,7 +15,7 @@ public class OpenImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_image);
-        Funtion funtion = new Funtion();
+        FuntionUsing funtion = new FuntionUsing();
         ImageView seeImg = findViewById(R.id.SeeImage);
         ImageView backBtn = findViewById(R.id.backBtn);
         Bundle bundle = getIntent().getExtras();

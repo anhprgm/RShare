@@ -118,12 +118,9 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new SearchFragment());
                     break;
                 case R.id.rvideo:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(ContextCompat.getColor(this, R.color.red_pink));
-                    }
-
+                    Window window = getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(ContextCompat.getColor(this, R.color.red_pink));
                     bottomNavigationView.setBackgroundColor(Color.BLACK);
                     bottomNavigationView.setItemIconTintList(colorStateList);
                     loadFragment(new RvidFragment());

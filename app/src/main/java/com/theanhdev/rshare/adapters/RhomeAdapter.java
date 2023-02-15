@@ -1,9 +1,6 @@
 package com.theanhdev.rshare.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.databinding.ItemContainerPostBinding;
+import com.theanhdev.rshare.funtionUsing.FuntionUsing;
 import com.theanhdev.rshare.listeners.PostListener;
 import com.theanhdev.rshare.models.PostInf;
 import com.theanhdev.rshare.models.Posts;
@@ -67,11 +65,11 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
         }
         void setData(Posts posts) {
             binding.caption.setText(posts.caption);
-            binding.imagePost.setImageBitmap(getBitmapImage(posts.image));
+            binding.imagePost.setImageBitmap(FuntionUsing.setImageBitmap(posts.image));
             binding.userName.setText(posts.userName);
             if (posts.userImage.equals("")) {
                 binding.avt.setImageResource(R.drawable.user_blank_img);
-            } else binding.avt.setImageBitmap(getBitmapImage(posts.userImage));
+            } else binding.avt.setImageBitmap(FuntionUsing.setImageBitmap(posts.userImage));
 
             DatabaseReference PostInfRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference(Constants.KEY_COLLECTION_POSTS);
             PostInfRef.child(posts.idPost).child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).addValueEventListener(new ValueEventListener() {
@@ -101,6 +99,9 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
             binding.timeStamp.setText(posts.timeStamp + " ago");
             binding.avt.setOnClickListener(v -> postListener.onUserImageClicked(posts));
             binding.love.setOnClickListener(v -> postListener.onLoveBtn(posts));
+            binding.comment.setOnClickListener(v -> {
+
+            });
             binding.imagePost.setOnClickListener(v -> {
                 binding.loveAnim.setVisibility(View.VISIBLE);
                 clickCount.getAndIncrement();
@@ -117,8 +118,4 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
         }
     }
 
-    private Bitmap getBitmapImage(String encodedImage){
-        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
 }
