@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -122,9 +123,19 @@ public class AccountFragment extends Fragment implements PostListener {
             startActivity(intent);
         });
         follow.setOnClickListener(v -> {
-            Followers followers = new Followers();
-            followers.uidFollowers = user.getUid();
-            usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).child(user.getUid()).setValue(followers);
+            switch (follow.getText().toString()) {
+                case "follow":
+                    Followers followers = new Followers();
+                    followers.uidFollowers = user.getUid();
+                    usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).child(user.getUid()).setValue(followers);
+                    follow.setText("unfollow");
+                    break;
+                case "unfollow":
+                    usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).child(user.getUid()).removeValue();
+                    follow.setText("follow");
+                    break;
+            }
+
         });
         //if id == uid hide inbox
         inbox.setVisibility(View.VISIBLE);
@@ -234,7 +245,7 @@ public class AccountFragment extends Fragment implements PostListener {
             startActivity(intent);
         });
         // load followers
-        usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 TextView textView = view.findViewById(R.id.sumFollowers);

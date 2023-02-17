@@ -73,6 +73,7 @@
             android:layout_marginStart="30dp"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/sumPosts"
                 android:textColor="@color/black"
                 android:padding="5dp"
                 android:layout_width="65dp"
