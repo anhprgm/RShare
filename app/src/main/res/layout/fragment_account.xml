@@ -54,7 +54,7 @@
                 android:textColor="@color/black"
                 android:id="@+id/follow"
                 android:padding="5dp"
-                android:layout_width="65dp"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:text="follow"
@@ -84,7 +84,8 @@
             <TextView
                 android:textColor="@color/black"
                 android:padding="5dp"
-                android:layout_width="65dp"
+                android:layout_width="wrap_content"
+                android:id="@+id/sumFollowers"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="0\nFollows"

@@ -33,6 +33,7 @@ import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
 import com.theanhdev.rshare.funtionUsing.FuntionUsing;
 import com.theanhdev.rshare.listeners.PostListener;
+import com.theanhdev.rshare.models.Followers;
 import com.theanhdev.rshare.models.PostInf;
 import com.theanhdev.rshare.models.Posts;
 import com.theanhdev.rshare.models.Users;
@@ -121,7 +122,9 @@ public class AccountFragment extends Fragment implements PostListener {
             startActivity(intent);
         });
         follow.setOnClickListener(v -> {
-            usersRef.child(user.getUid()).setValue(Constants.KEY_LIST_USER_FOLLOWERS);
+            Followers followers = new Followers();
+            followers.uidFollowers = user.getUid();
+            usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).child(user.getUid()).setValue(followers);
         });
         //if id == uid hide inbox
         inbox.setVisibility(View.VISIBLE);
@@ -134,7 +137,7 @@ public class AccountFragment extends Fragment implements PostListener {
         RhomeAdapter rhomeAdapter = new RhomeAdapter(postsList, this);
         recyclerPostUser.setAdapter(rhomeAdapter);
         //Load user post
-        usersRef.addValueEventListener(new ValueEventListener() {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postsList.clear();
@@ -229,6 +232,27 @@ public class AccountFragment extends Fragment implements PostListener {
         moreBtn.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), UserCustomActivity.class);
             startActivity(intent);
+        });
+        // load followers
+        usersRef.child(id).child(Constants.KEY_LIST_USER_FOLLOWERS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                TextView textView = view.findViewById(R.id.sumFollowers);
+                textView.setText(snapshot.getChildrenCount() + "\nFollowers");
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Followers followers = dataSnapshot.getValue(Followers.class);
+                    assert followers != null;
+                    if (followers.uidFollowers.equals(user.getUid())) {
+                        follow.setText("unfollow");
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
         return view;
     }
