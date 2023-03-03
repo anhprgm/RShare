@@ -145,36 +145,36 @@ public class MainActivity extends AppCompatActivity {
         });
         createNotificationChannel();
         DatabaseReference conversationRef = FirebaseDatabase.getInstance(Constants.KEY_FIREBASE_REALTIME).getReference(Constants.KEY_COLLECTION_CONVERSIONS).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()));
-        conversationRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                RecentChat recentChat = snapshot.getValue(RecentChat.class);
-                assert recentChat != null;
-                if (FirebaseAuth.getInstance().getUid().equals(recentChat.uid_sender)) {
-                    pushNotification(recentChat.name, recentChat.message);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Log.d("changexxx", "sd");
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d("changexxx", "s");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("changexxx", "j");
-            }
-        });
+//        conversationRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                RecentChat recentChat = snapshot.getValue(RecentChat.class);
+//                assert recentChat != null;
+//                if (FirebaseAuth.getInstance().getUid().equals(recentChat.uid_sender)) {
+//                    pushNotification(recentChat.name, recentChat.message);
+//                }
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//                Log.d("changexxx", "sd");
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                Log.d("changexxx", "s");
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.d("changexxx", "j");
+//            }
+//        });
 
 
     }
@@ -212,31 +212,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void pushNotification(String userName, String conversation) {
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.logorshare)
-                .setContentTitle(userName)
-                .setContentText(conversation)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setFullScreenIntent(pendingIntent, true);
-
-        NotificationManagerCompat notificationManagerCompat =
-                NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        notificationManagerCompat.notify(1234, builder.build());
-    }
+//    private void pushNotification(String userName, String conversation) {
+//        Intent intent = new Intent(this, MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+//                .setSmallIcon(R.drawable.logorshare)
+//                .setContentTitle(userName)
+//                .setContentText(conversation)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setAutoCancel(true)
+//                .setFullScreenIntent(pendingIntent, true);
+//
+//        NotificationManagerCompat notificationManagerCompat =
+//                NotificationManagerCompat.from(this);
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        notificationManagerCompat.notify(1234, builder.build());
+//    }
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library

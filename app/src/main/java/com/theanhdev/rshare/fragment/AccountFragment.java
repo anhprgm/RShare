@@ -290,5 +290,10 @@ public class AccountFragment extends Fragment implements PostListener {
         else PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).setValue(postInf);
     }
 
+    @Override
+    public void onCommentBtn(Posts posts) {
+
+    }
+
 
 }

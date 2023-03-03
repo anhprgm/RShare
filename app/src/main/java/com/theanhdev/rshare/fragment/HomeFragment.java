@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.theanhdev.rshare.Activities.ChatActivity;
 import com.theanhdev.rshare.Activities.LoginActivity;
 import com.theanhdev.rshare.Activities.MakePostActivity;
+import com.theanhdev.rshare.Activities.PostActivities;
 import com.theanhdev.rshare.MainActivity;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.adapters.RhomeAdapter;
@@ -234,6 +235,13 @@ public class HomeFragment extends Fragment implements PostListener {
         postInf.uidLovePost = FirebaseAuth.getInstance().getUid();
         if (posts.love) PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).removeValue();
         else PostRef.child(Constants.KEY_POST_INF).child(Constants.KEY_LOVE).child(postInf.uidLovePost).setValue(postInf);
+    }
+
+    @Override
+    public void onCommentBtn(Posts posts) {
+        Intent intent = new Intent(getActivity(), PostActivities.class);
+        intent.putExtra(Constants.UID_POST, posts);
+        startActivity(intent);
     }
 
 

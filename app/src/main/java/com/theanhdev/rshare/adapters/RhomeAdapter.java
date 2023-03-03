@@ -1,5 +1,7 @@
 package com.theanhdev.rshare.adapters;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.theanhdev.rshare.Activities.PostActivities;
 import com.theanhdev.rshare.R;
 import com.theanhdev.rshare.databinding.ItemContainerPostBinding;
 import com.theanhdev.rshare.funtionUsing.FuntionUsing;
@@ -101,7 +104,7 @@ public class RhomeAdapter extends RecyclerView.Adapter<RhomeAdapter.RhomeViewHol
             binding.avt.setOnClickListener(v -> postListener.onUserImageClicked(posts));
             binding.love.setOnClickListener(v -> postListener.onLoveBtn(posts));
             binding.comment.setOnClickListener(v -> {
-
+                postListener.onCommentBtn(posts);
             });
             binding.imagePost.setOnClickListener(v -> {
                 binding.loveAnim.setVisibility(View.VISIBLE);
