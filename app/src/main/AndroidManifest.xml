@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".PostActivities"
+            android:name=".Activities.PostActivities"
             android:exported="false" />
 
         <service

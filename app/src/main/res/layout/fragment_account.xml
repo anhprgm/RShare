@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/extra_light"
+
                 android:textSize="20sp"
                 android:layout_marginStart="10dp"
                 android:text="Name"
@@ -48,7 +48,7 @@
                 android:text="inbox"
                 android:textSize="13sp"
                 android:gravity="center"
-                android:fontFamily="@font/extra_light"
+
                 android:background="@drawable/background_input"/>
             <TextView
                 android:textColor="@color/black"
@@ -60,7 +60,7 @@
                 android:text="follow"
                 android:textSize="13sp"
                 android:gravity="center"
-                android:fontFamily="@font/extra_light"
+
                 android:background="@drawable/background_input"/>
         </LinearLayout>
 
@@ -81,7 +81,7 @@
                 android:text="0\nPosts"
                 android:textSize="13sp"
                 android:gravity="center"
-                android:fontFamily="@font/extra_light" />
+                 />
             <TextView
                 android:textColor="@color/black"
                 android:padding="5dp"
@@ -92,7 +92,7 @@
                 android:text="0\nFollows"
                 android:textSize="13sp"
                 android:gravity="center"
-                android:fontFamily="@font/extra_light" />
+                 />
         </LinearLayout>
 
         <ImageView

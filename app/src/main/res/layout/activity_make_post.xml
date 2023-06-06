@@ -38,7 +38,6 @@
             android:layout_height="wrap_content"
             android:text="Name User"
             android:id="@+id/userName"
-            android:fontFamily="@font/extra_light"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_marginStart="10dp"
@@ -49,7 +48,6 @@
             android:layout_height="40dp"
             android:text="Post"
             android:src="@drawable/ic_circle_success_svg"
-            android:fontFamily="@font/extra_light"
             android:id="@+id/savePost"
             android:gravity="center"
             android:textColor="@color/black"
@@ -90,7 +88,6 @@
         android:id="@+id/postLayout"
         android:layout_alignParentBottom="true">
         <EditText
-            android:fontFamily="@font/extra_light"
             android:id="@+id/caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

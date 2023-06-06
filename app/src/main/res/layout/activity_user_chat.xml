@@ -44,7 +44,6 @@
             android:textSize="15sp"
             android:id="@+id/userName"
             android:text="User Receiver Name"
-            android:fontFamily="@font/extra_light"
             android:layout_toEndOf="@+id/avt"
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"/>
@@ -79,7 +78,6 @@
                 android:textColor="@color/black"
                 android:padding="8dp"
                 android:maxHeight="100dp"
-                android:fontFamily="@font/extra_light"
                 android:id="@+id/inputMessage"
                 android:background="@drawable/background_input"/>
 
